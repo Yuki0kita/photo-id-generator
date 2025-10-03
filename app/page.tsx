@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useState } from 'react';
 import { Upload, Download, Loader2, AlertCircle } from 'lucide-react';
 
@@ -27,10 +28,16 @@ export default function PhotoIDGenerator() {
     if (!selectedFile) return;
     setLoading(true);
     setError('');
+    
     try {
       const formData = new FormData();
       formData.append('image', selectedFile);
-      const response = await fetch('/api/generate', { method: 'POST', body: formData });
+      
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        body: formData,
+      });
+      
       if (!response.ok) throw new Error('Failed');
       const data = await response.json();
       setGeneratedImage(data.image);
@@ -57,12 +64,14 @@ export default function PhotoIDGenerator() {
         <div className="bg-white rounded-2xl shadow-xl p-8 mt-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">証明写真ジェネレーター</h1>
           <p className="text-gray-600 mb-8">写真をアップロードすると、自動で証明写真規格に加工します</p>
+          
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex items-start gap-3">
               <AlertCircle className="text-red-500" size={20} />
               <p className="text-red-700">{error}</p>
             </div>
           )}
+          
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <h2 className="text-lg font-semibold text-gray-700 mb-4">元の画像</h2>
@@ -84,6 +93,7 @@ export default function PhotoIDGenerator() {
                 {loading ? <><Loader2 className="animate-spin" size={20} />処理中...</> : '証明写真を生成'}
               </button>
             </div>
+            
             <div>
               <h2 className="text-lg font-semibold text-gray-700 mb-4">生成された証明写真</h2>
               <div className="border-2 border-gray-200 rounded-lg p-8 min-h-[300px] flex items-center justify-center bg-gray-50">
